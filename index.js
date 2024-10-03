@@ -44,6 +44,21 @@ async function run() {
         res.send(result);
     })
 
+    app.get('/bookings', async(req, res)=>{
+      console.log(req.query.email);
+      console.log('user asche kina dekhi', req.user);
+      if(req.user.email !== req.query.email){
+          return res.status(403).send({message:"access forbidden"})
+      }
+      let query ={}
+      if(req.query?.email){
+        query={email: req.query.email}
+      }
+      const result = await carCollection.find(query).toArray();
+      res.send(result);
+    })
+
+
     app.post('/bookings', async(req, res)=>{
       const booking = req.body;
       console.log(booking);

@@ -44,25 +44,29 @@ async function run() {
         res.send(result);
     })
 
-    app.get('/bookings', async(req, res)=>{
+    app.get('/bookings', async (req, res) => {
       console.log(req.query.email);
-      console.log('user asche kina dekhi', req.user);
-      if(req.user.email !== req.query.email){
-          return res.status(403).send({message:"access forbidden"})
+      let query = {};
+      if (req.query?.email) {
+          query = { email: req.query.email }
       }
-      let query ={}
-      if(req.query?.email){
-        query={email: req.query.email}
-      }
-      const result = await carCollection.find(query).toArray();
+      const result = await bookingCollection.find(query).toArray();
       res.send(result);
-    })
+  })
 
 
     app.post('/bookings', async(req, res)=>{
       const booking = req.body;
       console.log(booking);
       const result = await bookingCollection.insertOne(booking);
+      res.send(result);
+    })
+
+    app.delete('/bookings/:id', async(req, res)=>{
+      const id = req.params.id;
+      console.log(id);
+      const query={_id:id}
+      const result = await bookingCollection.deleteOne(query);
       res.send(result);
     })
 
